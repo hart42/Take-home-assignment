@@ -1,19 +1,25 @@
-import { Console } from "console";
 import { AccountImpl } from "../interfaces/account";
+import { Request, Response, response } from 'express';
 
 let storedData: AccountImpl[] = [];
 
-const getBalance = ():AccountImpl => {
-    const account: AccountImpl = new AccountImpl(100, 42);
+const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
+    const { account_id } = req.query;
+    if(!account_id) {
+        return res.status(404).json(0);
+    }
 
-    storedData.push(account);
+    const account = storedData.find(account => account.id === Number(account_id));
+    if(!account) {
+        return res.status(404).json(0);
+    }
     
-    return account;
+    return res.status(200).json(account.balance);
 }
 
-const postReset = () => {
+const postReset = (req: Request, res: Response): Response =>  {
     storedData = [];
-    return;
+    return res.status(200);
 }
 
 export { getBalance, postReset }
