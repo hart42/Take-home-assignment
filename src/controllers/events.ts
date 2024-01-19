@@ -9,7 +9,7 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
         return res.status(404).json(0);
     }
 
-    const account = storedData.find(account => account.id === Number(account_id));
+    const account = accountExist(Number(account_id));
     if(!account) {
         return res.status(404).json(0);
     }
@@ -20,6 +20,15 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
 const postReset = (req: Request, res: Response): Response =>  {
     storedData = [];
     return res.status(200);
+}
+
+const accountExist = (account_id: number): AccountImpl | null => {
+    const account = storedData.find(account => account.id === (account_id));
+    if(!account) {
+        return null;
+    }
+
+    return account;
 }
 
 export { getBalance, postReset }
