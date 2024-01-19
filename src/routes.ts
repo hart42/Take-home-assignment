@@ -3,12 +3,8 @@ import { getBalance, postReset } from './controllers/events';
 
 const router: Router = Router();
 
-router.get('/balance', (req, res) => {
-    res.json(getBalance());
-});
+router.get('/balance', (req, res) => getBalance(req, res));
 
-router.post('/reset', (req, res) => {
-    res.status(200).json(postReset());
-});
+router.post('/reset', (req: Request, res: Response) => getBalance(req, res));
 
 export default router;
