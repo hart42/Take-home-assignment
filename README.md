@@ -17,7 +17,7 @@ Reset all data.
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
+// HTTP Status 200
 // No route or query parameters
 ```
 
