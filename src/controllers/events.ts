@@ -58,7 +58,15 @@ const postWithdraw = (req: Request, res: Response): Response < AccountImpl > => 
         if(!account) {
             return res.status(404).json(0);
         }
-        return res.status(201).json(account);
+
+        if(account.balance < amount) {
+            return res.status(404).json(0);
+        }
+
+        account.balance = account.balance - amount;
+        return res.status(201).json({
+            'origin' : account
+        });
     } catch (error) {
         return res.status(404).json(0);
     }
