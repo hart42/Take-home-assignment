@@ -6,7 +6,8 @@ import { TransferTransaction } from "../interfaces/Transfer";
 import { validateDepositTransaction } from '../validations/depositValidation';
 import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 import { validateTransferTransaction } from "../validations/transferValidation";
-import { accountExist, createAccount, resetAccounts } from './account';
+import { accountExist, createAccount, resetAccounts } from "./account";
+import { postDeposit } from "./deposit";
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -30,26 +31,36 @@ const postReset = (req: Request, res: Response): Response =>  {
     return res.status(200).send('OK');
 }
 
-const postDeposit = (req: Request, res: Response): Response< AccountImpl > => {
-    try {
-        const { type, destination, amount }: DepositTransaction = validateDepositTransaction(req);
-        
-        const account = accountExist(destination);
-        if(!account) {
-            const newAccount: AccountImpl = createAccount(destination, amount);
-            return res.status(201).json({
-                'destination' : newAccount
-            });
-        }
-
-        account.balance = account.balance + amount;
-        return res.status(201).json({
-            'destination' : account
-        });
-    } catch (error) {
+const events = (req: Request, res: Response): Response < AccountImpl > => {
+    const { type } = req.body;
+    if(!type) {
         return res.status(404).json(0);
     }
-    
+
+    switch (type) {
+        case 'deposit':
+            const { type, destination, amount }: DepositTransaction = validateDepositTransaction(req);
+            const account = postDeposit(destination, amount);
+            if(!account) {
+                break;
+            }
+            return res.status(201).json({
+                'destination' : account
+            });
+        
+        case 'withdraw':
+            postWithdraw(req, res);
+            break;
+
+        case 'transfer':
+            postTransfer(req, res);
+            break;
+        default:
+            res.status(404).json(0)
+            break;
+    }
+
+    return res.status(404).json(0);
 }
 
 const postWithdraw = (req: Request, res: Response): Response < AccountImpl > => {
@@ -107,4 +118,4 @@ const postTransfer = (req: Request, res: Response): Response < AccountImpl > => 
     }
 }
 
-export { getBalance, postReset, postDeposit, postWithdraw, postTransfer }
+export { getBalance, postReset, events, postWithdraw, postTransfer }
