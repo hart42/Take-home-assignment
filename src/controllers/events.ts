@@ -8,6 +8,7 @@ import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 import { validateTransferTransaction } from "../validations/transferValidation";
 import { accountExist, createAccount, resetAccounts } from "./account";
 import { postDeposit } from "./deposit";
+import { postWithdraw } from "./withdraw";
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -39,18 +40,24 @@ const events = (req: Request, res: Response): Response < AccountImpl > => {
 
     switch (type) {
         case 'deposit':
-            const { type, destination, amount }: DepositTransaction = validateDepositTransaction(req);
-            const account = postDeposit(destination, amount);
-            if(!account) {
+            const depositValidated: DepositTransaction = validateDepositTransaction(req);
+            const depositAccount = postDeposit(depositValidated.destination, depositValidated.amount);
+            if(!depositAccount) {
                 break;
             }
             return res.status(201).json({
-                'destination' : account
+                'destination' : depositAccount
             });
         
         case 'withdraw':
-            postWithdraw(req, res);
-            break;
+            const withdrawValidated: WithdrawTransaction = validateWithdrawTransaction(req);
+            const withdrawAccount = postWithdraw(withdrawValidated.origin, withdrawValidated.amount);
+            if(!withdrawAccount) {
+                break;
+            }
+            return res.status(201).json({
+                'origin' : withdrawAccount
+            });
 
         case 'transfer':
             postTransfer(req, res);
@@ -61,28 +68,6 @@ const events = (req: Request, res: Response): Response < AccountImpl > => {
     }
 
     return res.status(404).json(0);
-}
-
-const postWithdraw = (req: Request, res: Response): Response < AccountImpl > => {
-    try {
-        const { type, origin, amount }: WithdrawTransaction = validateWithdrawTransaction(req);
-
-        const account = accountExist(origin);
-        if(!account) {
-            return res.status(404).json(0);
-        }
-
-        if(account.balance < amount) {
-            return res.status(404).json(0);
-        }
-
-        account.balance = account.balance - amount;
-        return res.status(201).json({
-            'origin' : account
-        });
-    } catch (error) {
-        return res.status(404).json(0);
-    }
 }
 
 const postTransfer = (req: Request, res: Response): Response < AccountImpl > => {
