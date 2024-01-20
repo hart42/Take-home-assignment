@@ -2,6 +2,8 @@ import { AccountImpl } from "../interfaces/Account";
 import { Request, Response } from 'express';
 import { validateDepositTransaction } from '../validations/depositValidation';
 import { DepositTransaction } from "../interfaces/Deposit";
+import { WithdrawTransaction } from "../interfaces/Withdraw";
+import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 
 let storedData: AccountImpl[] = [];
 
@@ -48,6 +50,28 @@ const postDeposit = (req: Request, res: Response): Response< AccountImpl > => {
     
 }
 
+const postWithdraw = (req: Request, res: Response): Response < AccountImpl > => {
+    try {
+        const { type, origin, amount }: WithdrawTransaction = validateWithdrawTransaction(req);
+
+        const account = accountExist(origin);
+        if(!account) {
+            return res.status(404).json(0);
+        }
+
+        if(account.balance < amount) {
+            return res.status(404).json(0);
+        }
+
+        account.balance = account.balance - amount;
+        return res.status(201).json({
+            'origin' : account
+        });
+    } catch (error) {
+        return res.status(404).json(0);
+    }
+}
+
 const accountExist = (account_id: string): AccountImpl | null => {
     const account = storedData.find(account => account.id === (account_id));
     if(!account) {
@@ -57,4 +81,4 @@ const accountExist = (account_id: string): AccountImpl | null => {
     return account;
 }
 
-export { getBalance, postReset, postDeposit}
+export { getBalance, postReset, postDeposit, postWithdraw }
