@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getBalance, postReset, postDeposit, postWithdraw } from './controllers/events';
+import { getBalance, postReset, postDeposit, postWithdraw, postTransfer } from './controllers/events';
 
 const router: Router = Router();
 
@@ -17,7 +17,10 @@ router.post('/event', (req: Request, res: Response) => {
         case 'withdraw':
             postWithdraw(req, res);
             break;
-    
+
+        case 'transfer':
+            postTransfer(req, res);
+            break;
         default:
             res.status(404).json(0)
             break;
