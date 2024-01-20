@@ -24,7 +24,7 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
 const postReset = (req: Request, res: Response): Response =>  {
     console.log('Reset');
     storedData = [];
-    return res.status(200).json();
+    return res.status(200).send('OK');
 }
 
 const postDeposit = (req: Request, res: Response): Response< AccountImpl > => {
