@@ -37,7 +37,11 @@ const postDeposit = (req: Request, res: Response): Response< AccountImpl > => {
                 'destination' : newAccount
             });
         }
-        return res.status(200).json(account.balance);
+
+        account.balance = account.balance + amount;
+        return res.status(201).json({
+            'destination' : account
+        });
     } catch (error) {
         return res.status(404).json(0);
     }
