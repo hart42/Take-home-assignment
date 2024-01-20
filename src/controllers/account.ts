@@ -23,7 +23,6 @@ const createAccount = (account_id: string, amount: number): AccountImpl => {
 }
 
 const resetAccounts = (): Boolean =>  {
-    console.log('Reset');
     storedData = [];
     return storedData.length > 0 ? false : true;
 }
