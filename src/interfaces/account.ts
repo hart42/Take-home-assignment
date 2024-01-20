@@ -1,14 +1,14 @@
 interface Account {
-    id: number,
+    id: string,
     balance: number
 }
 
 export class AccountImpl implements Account {
-    constructor(id: number, balance: number) {
+    constructor(id: string, balance: number) {
         this.id = id,
         this.balance = balance
     }
 
-    id: number;
+    id: string;
     balance: number;
 }
