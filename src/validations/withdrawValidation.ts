@@ -8,6 +8,10 @@ export const validateWithdrawTransaction = (req: Request): WithdrawTransaction =
         throw new Error('invalid data for this transaction');
     }
 
+    if(type !== 'withdraw') {
+        throw new Error('wrong transaction');
+    }
+
     if(!Number.isInteger(amount) || amount < 1) {
         throw new Error('an integer greater than zero is required');
     }
