@@ -55,3 +55,24 @@ Returns the account's balance.
     0
 }
 ```
+### **Create account with initial balance**
+
+#### `POST` `/event`
+
+Create account with initial balance.
+
+-   **Request**  
+    The body must have an object with the following properties (respecting these names):
+    - "type": "deposit", (string)
+    - "destination": "100", (string)
+    - "amount": 10 (number)
+
+-   **Response**  
+    If **successful**, returns HTTP Status 201 and a json in the body in the format:{"destination": {"id":"100","balance":20}}  
+
+#### **Exemplos de resposta**
+
+```javascript
+// HTTP Status 201
+    {"destination": {"id":"100","balance":20}}
+```
