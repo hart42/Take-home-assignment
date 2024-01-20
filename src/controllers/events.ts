@@ -1,9 +1,11 @@
-import { AccountImpl } from "../interfaces/Account";
 import { Request, Response } from 'express';
-import { validateDepositTransaction } from '../validations/depositValidation';
+import { AccountImpl } from "../interfaces/Account";
 import { DepositTransaction } from "../interfaces/Deposit";
 import { WithdrawTransaction } from "../interfaces/Withdraw";
+import { TransferTransaction } from "../interfaces/Transfer";
+import { validateDepositTransaction } from '../validations/depositValidation';
 import { validateWithdrawTransaction } from "../validations/withdrawValidation";
+import { validateTransferTransaction } from "../validations/transferValidation";
 
 let storedData: AccountImpl[] = [];
 
@@ -72,6 +74,41 @@ const postWithdraw = (req: Request, res: Response): Response < AccountImpl > => 
     }
 }
 
+const postTransfer = (req: Request, res: Response): Response < AccountImpl > => {
+    try {
+        const { type, origin, amount, destination }: TransferTransaction = validateTransferTransaction(req);
+        
+        const originAccount = accountExist(origin);
+        if(!originAccount) {
+            return res.status(404).json(0);
+        }
+        if(originAccount.balance < amount) {
+            return res.status(404).json(0);
+        }
+        originAccount.balance = originAccount.balance - amount;
+        
+        const destinationAccount = accountExist(destination);
+        if(!destinationAccount) {
+            const newAccount: AccountImpl = new AccountImpl(destination, amount);
+            storedData.push(newAccount);
+
+            return res.status(201).json({
+                'origin' : originAccount,
+                'destination' : newAccount
+            });
+        }
+        
+        destinationAccount.balance = destinationAccount.balance + amount;
+        
+        return res.status(201).json({
+            'origin' : originAccount,
+            'destination' : destinationAccount
+        });
+    } catch (error) {
+        return res.status(404).json(0);
+    }
+}
+
 const accountExist = (account_id: string): AccountImpl | null => {
     const account = storedData.find(account => account.id === (account_id));
     if(!account) {
@@ -81,4 +118,4 @@ const accountExist = (account_id: string): AccountImpl | null => {
     return account;
 }
 
-export { getBalance, postReset, postDeposit, postWithdraw }
+export { getBalance, postReset, postDeposit, postWithdraw, postTransfer }
