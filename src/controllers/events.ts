@@ -83,7 +83,7 @@ const postTransfer = (req: Request, res: Response): Response < AccountImpl > => 
             return res.status(404).json(0);
         }
         if(originAccount.balance < amount) {
-            return res.status(404).json(0);
+            return res.status(403).json(0);
         }
         originAccount.balance = originAccount.balance - amount;
         
