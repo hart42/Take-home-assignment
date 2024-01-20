@@ -12,5 +12,9 @@ export const validateTransferTransaction = (req: Request): TransferTransaction =
         throw new Error('an integer greater than zero is required');
     }
 
+    if(origin === destination) {
+        throw new Error('origin and destination need to be different accounts');
+    }
+
     return { type, origin, amount, destination };
 }
