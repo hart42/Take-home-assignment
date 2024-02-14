@@ -9,7 +9,7 @@ export const validateTransferTransaction = (req: Request): TransferTransaction =
     }
 
     if(type !== 'transfer') {
-        throw new Error('wrong transaction');
+        throw new Error('wrong transaction < transfer >');
     }
     
     if(!Number.isInteger(amount) || amount < 1) {

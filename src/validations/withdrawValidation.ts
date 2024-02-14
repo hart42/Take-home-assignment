@@ -9,7 +9,7 @@ export const validateWithdrawTransaction = (req: Request): WithdrawTransaction =
     }
 
     if(type !== 'withdraw') {
-        throw new Error('wrong transaction');
+        throw new Error('wrong transaction < withdraw >');
     }
 
     if(!Number.isInteger(amount) || amount < 1) {
