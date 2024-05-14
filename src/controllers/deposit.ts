@@ -1,5 +1,5 @@
 import { AccountImpl } from "../interfaces/Account";
-import { accountExist, createAccount } from './account';
+import { accountExist, createAccount } from '../services/account';
 
 const postDeposit = (destination: string, amount: number): AccountImpl | null => {
     try {

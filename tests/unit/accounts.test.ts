@@ -1,4 +1,4 @@
-import { accountExist, createAccount, resetAccounts } from "../../src/controllers/account"
+import { accountExist, createAccount, resetAccounts } from "../../src/services/account"
 
 describe('Accounts tests', () => {
     const accountNumber = '1234'
