@@ -1,4 +1,4 @@
-import { createAccount } from "../../src/services/account";
+import { createAccount } from "../../src/models/account";
 import { postDeposit } from "../../src/controllers/deposit";
 
 describe('Deposit tests', () => {

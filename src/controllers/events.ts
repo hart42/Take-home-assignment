@@ -6,7 +6,7 @@ import { TransferTransaction } from "../interfaces/Transfer";
 import { validateDepositTransaction } from '../validations/depositValidation';
 import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 import { validateTransferTransaction } from "../validations/transferValidation";
-import { accountExist, resetAccounts } from "../services/account";
+import { accountExist, resetAccounts } from "../models/account";
 import { postDeposit } from "./deposit";
 import { postWithdraw } from "./withdraw";
 import { postTransfer } from "./transfer";

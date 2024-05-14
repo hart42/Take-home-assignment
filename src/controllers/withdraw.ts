@@ -1,5 +1,5 @@
 import { AccountImpl } from "../interfaces/Account";
-import { accountExist } from "../services/account";
+import { accountExist } from "../models/account";
 
 const postWithdraw = (origin: string, amount: number): AccountImpl | null => {
     try {
