@@ -10,6 +10,7 @@ import { accountExist, resetAccounts } from "../models/account";
 import { postDeposit } from "./deposit";
 import { postWithdraw } from "./withdraw";
 import { postTransfer } from "./transfer";
+import { accountExistService } from '../services/accountService';
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -17,12 +18,8 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
         return res.status(404).json(0);
     }
 
-    const account = accountExist(account_id);
-    if(!account) {
-        return res.status(404).json(0);
-    }
-    
-    return res.status(200).json(account.balance);
+    const account = accountExistService(account_id, res);
+    return account;
 }
 
 const postReset = (req: Request, res: Response): Response =>  {
