@@ -12,14 +12,9 @@ const accountExist = (account_id: string): AccountImpl | null => {
 }
 
 const createAccount = (account_id: string, amount: number): AccountImpl => {
-    const account = accountExist(account_id);
-    if(!account) {
-        const newAccount: AccountImpl = new AccountImpl(account_id, amount);
-        storedData.push(newAccount);
-        return newAccount;
-    }
-
-    return account;
+    const newAccount: AccountImpl = new AccountImpl(account_id, amount);
+    storedData.push(newAccount);
+    return newAccount;
 }
 
 const resetAccounts = (): Boolean =>  {

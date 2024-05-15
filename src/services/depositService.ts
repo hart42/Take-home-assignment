@@ -1,20 +1,15 @@
-import { Response } from "express"
-import { accountExist, createAccount } from "../models/account"
 import { AccountImpl } from "../interfaces/Account";
 import { postDeposit } from "../models/deposit";
+import { accountExistService, createAccountService } from "./accountService";
 
-const postDepositService = (destination: string, amount: number, res: Response): Response <AccountImpl> => {
-    const account = accountExist(destination);
+const postDepositService = (destination: string, amount: number): AccountImpl | null => {
+    const account = accountExistService(destination);
     if(!account) {
-        const newAccount: AccountImpl = createAccount(destination, amount);
-        return res.status(201).json({
-            'destination' : newAccount.id
-        });
+        const newAccount = createAccountService(destination, amount);
+        return newAccount;
     }
-    const deposit = postDeposit(account, amount);
-    return res.status(201).json({
-        'destination' : deposit.id
-    });
+    const deposit: AccountImpl = postDeposit(account, amount);
+    return deposit;
 }
 
 export { postDepositService }

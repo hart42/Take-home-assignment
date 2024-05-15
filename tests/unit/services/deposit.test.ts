@@ -1,5 +1,5 @@
-import { createAccount } from "../../src/models/account";
-import { postDeposit } from "../../src/controllers/deposit";
+import { createAccount } from "../../../src/models/account";
+import { postDeposit } from "../../../src/models/deposit";
 
 describe('Deposit tests', () => {
     const accountNumber = '1234';

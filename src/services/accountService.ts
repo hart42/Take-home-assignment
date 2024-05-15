@@ -1,22 +1,33 @@
 import { AccountImpl } from "../interfaces/Account";
-import { accountExist, resetAccounts } from "../models/account";
-import { Response } from "express";
+import { accountExist, createAccount, resetAccounts } from "../models/account";
 
-const accountExistService = (account_id: string, res:Response): Response< AccountImpl > => {
+const accountExistService = (account_id: string): AccountImpl | null => {
     const account = accountExist(account_id);
     if(!account) {
-        return res.status(404).json(0);
+        return null;
     }
-
-    return res.status(200).json(account.balance);
+    return account;
 }
 
-const resetAccountsService = (res: Response): Response => {
+const createAccountService = (account_id: string, amount: number): AccountImpl | null => {
+    const account = accountExist(account_id);
+    if(!account) {
+        if(amount > 1) {
+            const newAccount = createAccount(account_id, amount);
+            return newAccount;
+        }
+        return null;
+    }
+
+    return account;
+}
+
+const resetAccountsService = (): boolean => {
     const cleaned = resetAccounts()
     if(!cleaned) {
-        return res.status(404).json(0);
+        return false;
     }
-    return res.status(200).send('OK');
+    return true;
 }
 
-export { accountExistService, resetAccountsService, }
+export { accountExistService, resetAccountsService, createAccountService }
