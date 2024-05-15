@@ -7,10 +7,11 @@ import { validateDepositTransaction } from '../validations/depositValidation';
 import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 import { validateTransferTransaction } from "../validations/transferValidation";
 import { accountExist, resetAccounts } from "../models/account";
-import { postDeposit } from "./deposit";
+import { postDeposit } from "../models/deposit";
 import { postWithdraw } from "./withdraw";
 import { postTransfer } from "./transfer";
 import { accountExistService, resetAccountsService } from '../services/accountService';
+import { postDepositService } from '../services/depositService';
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -36,13 +37,8 @@ const events = (req: Request, res: Response): Response < AccountImpl > => {
     switch (type) {
         case 'deposit':
             const depositValidated: DepositTransaction = validateDepositTransaction(req);
-            const depositAccount = postDeposit(depositValidated.destination, depositValidated.amount);
-            if(!depositAccount) {
-                break;
-            }
-            return res.status(201).json({
-                'destination' : depositAccount
-            });
+            const depositAccount =  postDepositService(depositValidated.destination, depositValidated.amount, res);
+            return depositAccount;
         
         case 'withdraw':
             const withdrawValidated: WithdrawTransaction = validateWithdrawTransaction(req);
