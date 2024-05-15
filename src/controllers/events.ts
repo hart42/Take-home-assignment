@@ -6,10 +6,10 @@ import { TransferTransaction } from "../interfaces/Transfer";
 import { validateDepositTransaction } from '../validations/depositValidation';
 import { validateWithdrawTransaction } from "../validations/withdrawValidation";
 import { validateTransferTransaction } from "../validations/transferValidation";
-import { accountExist, resetAccounts } from "./account";
-import { postDeposit } from "./deposit";
-import { postWithdraw } from "./withdraw";
-import { postTransfer } from "./transfer";
+import { accountExistService, resetAccountsService } from '../services/accountService';
+import { postDepositService } from '../services/depositService';
+import { postTransferService } from '../services/transferService';
+import { postWithdrawService } from '../services/withdrawService';
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -17,16 +17,15 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
         return res.status(404).json(0);
     }
 
-    const account = accountExist(account_id);
+    const account = accountExistService(account_id);
     if(!account) {
         return res.status(404).json(0);
     }
-    
-    return res.status(200).json(account.balance);
+    return res.status(200).json(account!.balance);
 }
 
 const postReset = (req: Request, res: Response): Response =>  {
-    const cleaned = resetAccounts();
+    const cleaned = resetAccountsService();
     if(!cleaned) {
         return res.status(404).json(0);
     }
@@ -42,27 +41,23 @@ const events = (req: Request, res: Response): Response < AccountImpl > => {
     switch (type) {
         case 'deposit':
             const depositValidated: DepositTransaction = validateDepositTransaction(req);
-            const depositAccount = postDeposit(depositValidated.destination, depositValidated.amount);
+            const depositAccount =  postDepositService(depositValidated.destination, depositValidated.amount);
             if(!depositAccount) {
                 break;
             }
-            return res.status(201).json({
-                'destination' : depositAccount
-            });
+            return res.status(201).json({ 'destination' : depositAccount });
         
         case 'withdraw':
             const withdrawValidated: WithdrawTransaction = validateWithdrawTransaction(req);
-            const withdrawAccount = postWithdraw(withdrawValidated.origin, withdrawValidated.amount);
+            const withdrawAccount = postWithdrawService(withdrawValidated.origin, withdrawValidated.amount);
             if(!withdrawAccount) {
                 break;
             }
-            return res.status(201).json({
-                'origin' : withdrawAccount
-            });
+            return res.status(201).json({ 'origin' : withdrawAccount });
 
         case 'transfer':
             const transferValidated: TransferTransaction = validateTransferTransaction(req);
-            const transferAccounts = postTransfer(transferValidated.origin, transferValidated.amount, transferValidated.destination);
+            const transferAccounts = postTransferService(transferValidated.origin, transferValidated.amount, transferValidated.destination);
             if(!transferAccounts) {
                 break;
             }
@@ -71,7 +66,7 @@ const events = (req: Request, res: Response): Response < AccountImpl > => {
                 'destination' : transferAccounts.destination
             });
         default:
-            return res.status(404).json(0)
+            return res.status(404).json(0);
             break;
     }
 
