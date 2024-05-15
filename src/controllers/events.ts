@@ -10,7 +10,7 @@ import { accountExist, resetAccounts } from "../models/account";
 import { postDeposit } from "./deposit";
 import { postWithdraw } from "./withdraw";
 import { postTransfer } from "./transfer";
-import { accountExistService } from '../services/accountService';
+import { accountExistService, resetAccountsService } from '../services/accountService';
 
 const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
     const { account_id } = req.query;
@@ -23,11 +23,8 @@ const getBalance = (req: Request, res: Response): Response< AccountImpl > => {
 }
 
 const postReset = (req: Request, res: Response): Response =>  {
-    const cleaned = resetAccounts();
-    if(!cleaned) {
-        return res.status(404).json(0);
-    }
-    return res.status(200).send('OK');
+    const cleaned = resetAccountsService(res);
+    return cleaned;
 }
 
 const events = (req: Request, res: Response): Response < AccountImpl > => {
