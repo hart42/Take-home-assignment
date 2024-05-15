@@ -16,15 +16,15 @@ describe('Accounts tests', () => {
     it('should create an account', () => {
         const result = createAccount(accountNumber, accountAmount);
         expect(result).toBeDefined();
-        expect(result.id).toBe("1234");
-        expect(result.balance).toBe(42);
+        expect(result.id).toBe(accountNumber);
+        expect(result.balance).toBe(accountAmount);
     });
     
     it('should return the account that was just created', () => {
         const result = accountExist(accountNumber);
         expect(result).toBeDefined();
-        expect(result!.id).toBe("1234");
-        expect(result!.balance).toBe(42);
+        expect(result!.id).toBe(accountNumber);
+        expect(result!.balance).toBe(accountAmount);
     });
 
 })
