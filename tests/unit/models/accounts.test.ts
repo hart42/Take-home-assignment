@@ -1,5 +1,3 @@
-// import { accountExist, createAccount, resetAccounts } from "../../../src/models/account"
-
 import { accountExist, resetAccounts, createAccount } from "../../../src/models/account";
 
 describe('Accounts tests', () => {
