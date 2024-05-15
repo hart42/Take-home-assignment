@@ -1,10 +1,12 @@
-import { accountExist, createAccount, resetAccounts } from "../../src/models/account"
+// import { accountExist, createAccount, resetAccounts } from "../../../src/models/account"
+
+import { accountExist, resetAccounts, createAccount } from "../../../src/models/account";
 
 describe('Accounts tests', () => {
     const accountNumber = '1234'
     const accountAmount = 42
     it('should reset the accounts database', () => {
-        const result = resetAccounts();
+        const result = resetAccounts()
         expect(result).toBe(true);
     });
 
